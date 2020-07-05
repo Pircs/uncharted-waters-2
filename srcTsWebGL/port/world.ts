@@ -1,5 +1,7 @@
+import * as Pixi from 'pixi.js';
+
 import { draw } from './map';
-import Pixi from '../pixi';
+import { draw as drawC } from './characters';
 
 interface World {
   renderer: Pixi.Renderer;
@@ -23,10 +25,10 @@ const world = <World>{
 
 const setup = () => {
   const map = draw('day');
-
-  Pixi.settings.SCALE_MODE = Pixi.SCALE_MODES.NEAREST;
+  const c = drawC();
 
   world.container.addChild(map);
+  world.container.addChild(c);
   world.container.scale.set(2, 2);
 
   setupi = 1;
@@ -38,6 +40,8 @@ const update = (offset: number): void => {
   if (!setupi) {
     setup();
   }
+
+  drawC();
 
   world.container.pivot.x = offset;
   world.container.pivot.y = offset;

@@ -6230,7 +6230,6 @@ const data: Data = {
     },
     4: {
       name: 'Harbor',
-      greeting: 'Ahoy there, matey, will ye be shoving off?',
       menu: [
         'Sail',
         'Supply',

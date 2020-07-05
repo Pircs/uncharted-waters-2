@@ -1,6 +1,9 @@
+import * as Pixi from 'pixi.js';
+
 import Assets from '../assets';
 import Data, { BuildingLocations, CollisionIndices } from './data';
-import Pixi from '../pixi';
+
+// TODO: find a better representation of times of day tiles
 
 interface Map {
   tilesize: number;
@@ -12,7 +15,7 @@ interface Map {
   collisionIndices: CollisionIndices;
   portId: number;
   baseTexture: Pixi.BaseTexture;
-  tileTextureMap: any;
+  textureMap: Pixi.Texture[][];
   graphics: Pixi.Graphics;
 }
 
@@ -20,7 +23,9 @@ const map = <Map>{
   tilesize: 16,
   columns: 96,
   rows: 96,
-  baseTexture: new Pixi.BaseTexture(Assets.portTilesets),
+  baseTexture: new Pixi.BaseTexture(Assets.portTilesets, {
+    scaleMode: Pixi.SCALE_MODES.NEAREST,
+  }),
 };
 
 const setup = () => {
@@ -36,15 +41,20 @@ const setup = () => {
   map.buildings = port.buildings;
   map.collisionIndices = Data.tilesets[map.tileset].collisionIndices;
 
-  map.tileTextureMap = [];
+  map.textureMap = [];
 
-  for (let i1 = 0; i1 < 240; i1 += 1) {
-    for (let i2 = 0; i2 < 10; i2 += 1) {
-      if (!map.tileTextureMap[i1]) {
-        map.tileTextureMap[i1] = [];
+  for (let i = 0; i < 240; i += 1) {
+    for (let j = 0; j < 10; j += 1) {
+      if (!map.textureMap[i]) {
+        map.textureMap[i] = [];
       }
 
-      map.tileTextureMap[i1][i2] = new Pixi.Texture(map.baseTexture, new Pixi.Rectangle(i1 * 16, i2 * 16, 16, 16))
+      map.textureMap[i][j] = new Pixi.Texture(map.baseTexture, new Pixi.Rectangle(
+        i * map.tilesize,
+        j * map.tilesize,
+        map.tilesize,
+        map.tilesize
+      ));
     }
   }
 
@@ -61,14 +71,14 @@ const draw = (timeOfDay: string) => {
   for (let x = 0; x < map.columns; x += 1) {
     for (let y = 0; y < map.rows; y += 1) {
       map.graphics.beginTextureFill({
-        texture: map.tileTextureMap[tiles(x, y)][tilesetOffset(timeOfDay)],
+        texture: map.textureMap[tiles(x, y)][tilesetOffset(timeOfDay)],
       });
 
       map.graphics.drawRect(
-        x * 16,
-        y * 16,
-        16,
-        16,
+        x * map.tilesize,
+        y * map.tilesize,
+        map.tilesize,
+        map.tilesize,
       );
 
       map.graphics.endFill();
