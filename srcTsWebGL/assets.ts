@@ -1,6 +1,6 @@
-import portTilesets from '../src/assets/img/port-tilesets.png';
-import portTilemaps from '../src/assets/data/port-tilemaps.bin';
-import portCharacters from '../src/assets/img/characters.png';
+import portTilesets from './port/assets/tilesets.png';
+import portTilemaps from './port/assets/tilemaps.bin';
+import portCharacters from './port/assets/characters.png';
 
 export interface Assets {
   [key: string]: any;

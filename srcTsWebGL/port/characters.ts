@@ -1,4 +1,4 @@
-import Assets from './assets';
+import Assets from '../assets';
 import Data from './data';
 import * as Pixi from 'pixi.js';
 

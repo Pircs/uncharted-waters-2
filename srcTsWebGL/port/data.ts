@@ -2,7 +2,7 @@ interface Data {
   ports: Port;
   tilesets: Tilesets;
   characters: any;
-  buildings: any;
+  buildings: Buildings;
   regions: any;
   markets: any;
 }
@@ -22,27 +22,37 @@ interface Port {
     };
     economyId: number;
     industryId: number;
-    buildings: {
-      [key: number]: {
-        x: number;
-        y: number;
-      }
-    };
+    buildings: BuildingLocations;
     tileset: number;
+  }
+}
+
+export interface BuildingLocations {
+  [key: number]: {
+    x: number;
+    y: number;
   }
 }
 
 interface Tilesets {
   [key: number]: {
-    collisionIndices: {
-      right: number;
-      left: number;
-      either: number;
-    };
+    collisionIndices: CollisionIndices;
   };
 }
 
-// @ts-nocheck
+export interface CollisionIndices {
+  right: number;
+  left: number;
+  either: number;
+}
+
+export interface Buildings {
+  [key: number]: {
+    name: string;
+    menu: string[];
+  };
+}
+
 const data: Data = {
   ports: {
     1: {
@@ -6047,162 +6057,6 @@ const data: Data = {
         },
       },
       tileset: 5,
-    },
-    101: {
-      name: 'Hekla',
-      x: 784,
-      y: 210,
-      buildings: {
-        4: {
-          x: 62,
-          y: 54,
-        },
-      },
-    },
-    102: {
-      name: 'Narvik',
-      x: 998,
-      y: 114,
-    },
-    103: {
-      name: 'Cape Town',
-      x: 1006,
-      y: 860,
-    },
-    104: {
-      name: 'Belgrade',
-      x: 1012,
-      y: 312,
-    },
-    105: {
-      name: 'Tamatave',
-      x: 1192,
-      y: 758,
-    },
-    106: {
-      name: 'Dikson',
-      x: 1386,
-      y: 60,
-    },
-    107: {
-      name: 'Lushun',
-      x: 1632,
-      y: 360,
-    },
-    108: {
-      name: 'Leveque',
-      x: 1652,
-      y: 716,
-    },
-    109: {
-      name: 'Mindanao',
-      x: 1656,
-      y: 578,
-    },
-    110: {
-      name: 'Tiksi',
-      x: 1676,
-      y: 78,
-    },
-    111: {
-      name: 'Ezo',
-      x: 1740,
-      y: 334,
-    },
-    112: {
-      name: 'Geelong',
-      x: 1748,
-      y: 884,
-    },
-    113: {
-      name: 'Guam',
-      x: 1758,
-      y: 538,
-    },
-    114: {
-      name: 'Moresby',
-      x: 1770,
-      y: 686,
-    },
-    115: {
-      name: 'Korf',
-      x: 1880,
-      y: 200,
-    },
-    116: {
-      name: 'Wanganui',
-      x: 1930,
-      y: 900,
-    },
-    117: {
-      name: 'Suva',
-      x: 1960,
-      y: 738,
-    },
-    118: {
-      name: 'Nome',
-      x: 2062,
-      y: 156,
-    },
-    119: {
-      name: 'Naalehu',
-      x: 2120,
-      y: 498,
-    },
-    120: {
-      name: 'Tahiti',
-      x: 2134,
-      y: 732,
-    },
-    121: {
-      name: 'Juneau',
-      x: 70,
-      y: 228,
-    },
-    122: {
-      name: 'Coppermine',
-      x: 152,
-      y: 122,
-    },
-    123: {
-      name: 'Santa Barbara',
-      x: 174,
-      y: 448,
-    },
-    124: {
-      name: 'Churchill',
-      x: 330,
-      y: 242,
-    },
-    125: {
-      name: 'Callao',
-      x: 394,
-      y: 724,
-    },
-    126: {
-      name: 'Valparaiso',
-      x: 424,
-      y: 892,
-    },
-    127: {
-      name: 'Mollendo',
-      x: 430,
-      y: 778,
-    },
-    128: {
-      name: 'Cape Cod',
-      x: 466,
-      y: 372,
-    },
-    129: {
-      name: 'Montevideo',
-      x: 516,
-      y: 906,
-    },
-    130: {
-      name: 'Forel',
-      x: 660,
-      y: 190,
     },
   },
   tilesets: {

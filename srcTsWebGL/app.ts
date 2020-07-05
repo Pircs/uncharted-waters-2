@@ -1,5 +1,5 @@
 import { load } from './assets';
-import { draw, update, characters } from './map';
+import { update } from './port/world';
 
 load()
   .then(() => {
@@ -7,13 +7,11 @@ load()
 
     const loop = () => {
       update(offset);
-      offset += 0;
+      offset += 1;
       requestAnimationFrame(loop);
     };
 
-    draw('dusk');
-    characters();
     update(0);
 
-    //requestAnimationFrame(loop);
+    requestAnimationFrame(loop);
   });
