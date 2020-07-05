@@ -3,6 +3,7 @@ import * as Pixi from 'pixi.js';
 import { npc } from './npc';
 import Assets from '../assets';
 import PercentNextMove from '../../src/port/percent-next-move';
+import Input from './input';
 
 const MAP_TILESIZE = 16;
 
@@ -19,27 +20,37 @@ const characters = <Characters>{
   tilesize: 32,
   columns: 32,
   rows: 1,
-  baseTexture: new Pixi.BaseTexture(Assets.portCharacters, {
-    scaleMode: Pixi.SCALE_MODES.NEAREST,
-  }),
-  textureMap: [],
-  graphics: new Pixi.Graphics,
+  graphics: new Pixi.Graphics(),
 };
 
-for (let i = 0; i < characters.columns; i += 1) {
-  characters.textureMap[i] = new Pixi.Texture(characters.baseTexture, new Pixi.Rectangle(
-    i * characters.tilesize,
-    0,
-    characters.tilesize,
-    characters.tilesize
-  ));
-}
+const setup = () => {
+  characters.baseTexture = new Pixi.BaseTexture(Assets.portCharacters, {
+    scaleMode: Pixi.SCALE_MODES.NEAREST,
+  });
 
-export const draw = () => {
+  characters.textureMap = [];
+
+  for (let i = 0; i < characters.columns; i += 1) {
+    characters.textureMap[i] = new Pixi.Texture(characters.baseTexture, new Pixi.Rectangle(
+      i * characters.tilesize,
+      0,
+      characters.tilesize,
+      characters.tilesize
+    ));
+  }
+};
+
+const draw = () => {
+  if (!characters.baseTexture) {
+    setup();
+  }
+
   PercentNextMove.update();
   if (PercentNextMove.percentNextMove !== 0) {
     return characters.graphics;
   }
+
+  console.log(Input.direction);
 
   const npcs = npc.update();
 
@@ -62,3 +73,5 @@ export const draw = () => {
 
   return characters.graphics;
 }
+
+export default { draw };

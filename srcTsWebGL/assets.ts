@@ -1,6 +1,7 @@
 import portTilesets from './port/assets/tilesets.png';
 import portTilemaps from './port/assets/tilemaps.bin';
 import portCharacters from './port/assets/characters.png';
+import portCursors from './port/assets/cursors.png';
 
 export interface Assets {
   [key: string]: any;
@@ -11,6 +12,7 @@ const assets = {
   portTilesets,
   portTilemaps,
   portCharacters,
+  portCursors,
 };
 
 const isImage = (url: string) => url.endsWith('.png');

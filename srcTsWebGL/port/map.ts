@@ -23,9 +23,6 @@ const map = <Map>{
   tilesize: 16,
   columns: 96,
   rows: 96,
-  baseTexture: new Pixi.BaseTexture(Assets.portTilesets, {
-    scaleMode: Pixi.SCALE_MODES.NEAREST,
-  }),
 };
 
 const setup = () => {
@@ -40,6 +37,10 @@ const setup = () => {
   map.tileset = port.tileset;
   map.buildings = port.buildings;
   map.collisionIndices = Data.tilesets[map.tileset].collisionIndices;
+
+  map.baseTexture = new Pixi.BaseTexture(Assets.portTilesets, {
+    scaleMode: Pixi.SCALE_MODES.NEAREST,
+  }),
 
   map.textureMap = [];
 
@@ -64,7 +65,7 @@ const setup = () => {
 const tiles = (x: number, y: number) => map.tilemap[y * map.columns + x];
 
 const draw = (timeOfDay: string) => {
-  if (!map.portId) {
+  if (!map.baseTexture) {
     setup();
   }
 
@@ -91,4 +92,4 @@ const draw = (timeOfDay: string) => {
 const timesOfDay = ['dawn', 'day', 'dusk', 'night'];
 const tilesetOffset = (timeOfDay: string) => map.tileset * timesOfDay.length + timesOfDay.indexOf(timeOfDay);
 
-export { draw };
+export default { draw };
