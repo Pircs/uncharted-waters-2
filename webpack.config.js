@@ -1,15 +1,14 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CompressionPlugin = require("compression-webpack-plugin")
+const CompressionPlugin = require("compression-webpack-plugin");
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = (env, argv) => {
   const config = {
     entry: {
       app: [
-        'babel-polyfill',
-        'whatwg-fetch',
-        './src/app',
+        '@babel/polyfill',
+        './srcTsWebGL/app',
       ],
     },
     output: {
@@ -17,22 +16,14 @@ module.exports = (env, argv) => {
       filename: '[name]-[hash].bundle.js',
     },
     resolve: {
-      extensions: ['.js', '.jsx'],
+      extensions: ['.tsx', '.ts', '.js'],
     },
     module: {
       rules: [
         {
-          test: /\.(json|mp3|png|bin)$/,
-          type: 'javascript/auto', // https://github.com/webpack/webpack/issues/6586
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                name: '[name]-[hash].[ext]',
-                useRelativePath: true,
-              },
-            },
-          ],
+          test: /\.tsx?$/,
+          exclude: /node_modules/,
+          use: ['babel-loader'],
         },
         {
           test: /\.css$/,
@@ -59,15 +50,24 @@ module.exports = (env, argv) => {
           ],
         },
         {
-          test: /\.jsx$/,
-          exclude: /node_modules/,
-          loader: 'babel-loader',
+          test: /\.(json|mp3|png|bin)$/,
+          type: 'javascript/auto', // https://github.com/webpack/webpack/issues/6586
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: '[name]-[hash].[ext]',
+                useRelativePath: true,
+              },
+            },
+          ],
         },
       ],
     },
+    devtool: 'source-map',
     devServer: {
       compress: true,
-      port: 8081,
+      port: 8080,
     },
     performance: {
       hints: false,
