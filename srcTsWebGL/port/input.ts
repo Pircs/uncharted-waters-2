@@ -1,35 +1,45 @@
-// @ts-nocheck
+type wasd = 'w' | 'a' | 's' | 'd';
+type direction = 'n' | 'e' | 's' | 'w';
 
-import EventListener from '../eventListener';
-import Cursors from '../cursors';
+interface Input {
+  direction: direction | '';
+  pressedKeys: {
+    [key in wasd]: boolean;
+  };
+  keyMap: {
+    [key in wasd]: direction;
+  };
+  setup: () => void;
+}
 
-const setupKeyboard = () => {
-  EventListener.add('keydown', keyboard);
-  EventListener.add('keyup', keyboard);
+const input = <Input>{
+  direction: '',
+  pressedKeys: {
+    w: false,
+    d: false,
+    s: false,
+    a: false,
+  },
+  keyMap: {
+    w: 'n',
+    d: 'e',
+    s: 's',
+    a: 'w',
+  },
+  setup: () => {
+    document.addEventListener('keydown', keyboard);
+    document.addEventListener('keyup', keyboard);
+  },
 };
 
-const setupMouse = () => {
-  disableRightClick();
-
-  EventListener.add('mousemove', setCursorDirection);
-  EventListener.add('mousedown', mouse);
-  EventListener.add('mouseup', mouse);
-};
-
-const disableRightClick = () => {
-  EventListener.add('contextmenu', preventDefault, input.canvasElement);
-};
-
-const preventDefault = (e: MouseEvent) => {
-  e.preventDefault();
-};
+const isWasd = (key: string): key is wasd => key in input.keyMap;
 
 const keyboard = (e: KeyboardEvent) => {
-  const pressedKey = input.keyMap[e.key];
+  const pressedKey = e.key;
 
-  if (!pressedKey) {
+  if(!isWasd(pressedKey)) {
     return;
-  }
+  };
 
   e.preventDefault();
 
@@ -42,143 +52,18 @@ const keyboard = (e: KeyboardEvent) => {
   }
 
   if (input.pressedKeys[pressedKey]) {
-    input.direction = pressedKey;
-  } else if (input.pressedKeys.n) {
+    input.direction = input.keyMap[pressedKey];
+  } else if (input.pressedKeys.w) {
     input.direction = 'n';
-  } else if (input.pressedKeys.e) {
+  } else if (input.pressedKeys.d) {
     input.direction = 'e';
   } else if (input.pressedKeys.s) {
     input.direction = 's';
-  } else if (input.pressedKeys.w) {
+  } else if (input.pressedKeys.a) {
     input.direction = 'w';
   } else {
     input.direction = '';
   }
-
-  Cursors.reset();
 };
-
-const setCursorDirection = (e: MouseEvent) => {
-  if (throttleMovement(20)) {
-    return;
-  }
-
-  const xDifference = e.clientX - input.mouseLastPosition.x;
-  const yDifference = e.clientY - input.mouseLastPosition.y;
-
-  input.mouseLastPosition = {
-    x: e.clientX,
-    y: e.clientY,
-  };
-
-  if (Math.abs(xDifference) < input.mouseSensitivity
-    && Math.abs(yDifference) < input.mouseSensitivity) {
-    return;
-  }
-
-  if (Math.abs(xDifference) >= Math.abs(yDifference)) {
-    if (xDifference > 0) {
-      input.cursorDirection = 'e';
-    }
-    if (xDifference < 0) {
-      input.cursorDirection = 'w';
-    }
-  } else {
-    if (yDifference > 0) {
-      input.cursorDirection = 's';
-    }
-    if (yDifference < 0) {
-      input.cursorDirection = 'n';
-    }
-  }
-
-  Cursors.update(input.cursorDirection);
-};
-
-const mouse = (e: MouseEvent) => {
-  if (e.which === input.mouseLeft) {
-    e.preventDefault();
-
-    if (e.type === 'mousedown') {
-      input.direction = input.cursorDirection;
-      input.mousedownIntervals.push(
-        window.setInterval(() => {
-          input.direction = input.cursorDirection;
-        }, 20),
-      );
-    }
-
-    if (e.type === 'mouseup') {
-      input.direction = '';
-      input.mousedownIntervals.forEach(interval => window.clearInterval(interval));
-      input.mousedownIntervals = [];
-    }
-  }
-};
-
-const throttleMovement = (milliseconds: number) => {
-  if (window.performance.now() - input.lastMoveTime[milliseconds] < milliseconds) {
-    return true;
-  }
-
-  input.lastMoveTime[milliseconds] = window.performance.now();
-  return false;
-};
-
-interface Input {
-  direction: string;
-  canvasElement: HTMLCanvasElement;
-  lastMoveTime: {
-    [key: number]: number;
-  };
-  pressedKeys: {
-    up: boolean;
-    right: boolean;
-    down: boolean;
-    left: boolean;
-  };
-  keyMap: {
-    w: 'n',
-    d: 'e',
-    s: 's',
-    a: 'w',
-  };
-  mouseLeft: number;
-  mouseSensitivity: number;
-  mouseLastPosition: {
-    x: number;
-    y: number;
-  };
-  mousedownIntervals: number[];
-  cursorDirection: string;
-}
-
-const input = <Input>{};
-
-input.direction = '';
-input.canvasElement = document.querySelector('canvas') as HTMLCanvasElement;
-input.lastMoveTime = {};
-input.pressedKeys = {
-  up: false,
-  right: false,
-  down: false,
-  left: false,
-};
-input.keyMap = {
-  w: 'n',
-  d: 'e',
-  s: 's',
-  a: 'w',
-};
-input.mouseLeft = 1;
-input.mouseSensitivity = 5;
-input.mouseLastPosition = {
-  x: 0,
-  y: 0,
-};
-input.mousedownIntervals = [];
-
-setupKeyboard();
-setupMouse();
 
 export default input;

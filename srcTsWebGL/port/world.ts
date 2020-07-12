@@ -2,7 +2,7 @@ import * as Pixi from 'pixi.js';
 
 import Map from './map';
 import Characters from './characters';
-import Cursors from '../cursors';
+import Input from './input';
 
 interface World {
   renderer: Pixi.Renderer;
@@ -27,8 +27,7 @@ const world = <World>{
 };
 
 const setup = () => {
-  Cursors.setup();
-
+  Input.setup();
   const map = Map.draw('day');
   const characters = Characters.draw();
 
